@@ -6,16 +6,12 @@ import styles from "./string.module.css";
 import { Circle } from "../ui/circle/circle";
 import { ElementStates } from "../../types/element-states";
 import { DELAY_IN_MS } from "../../constants/delays";
-
-interface IElemState {
-  state?: ElementStates;
-  item: string;
-}
+import { delay, IElemState, swapString } from "../utils/utils";
 
 export const StringComponent: React.FC = () => {
 
-const [valueInput, setValueInput] = React.useState('');
-const [valueString, setValueString] = React.useState('' || Array<IElemState>);
+const [valueInput, setValueInput] = React.useState<string>('');
+const [valueString, setValueString] = React.useState<Array<IElemState>>([]);
 const [disabled, setDisabled] = React.useState<boolean>(false);
 
 const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,17 +23,6 @@ const handleClick = (e: React.SyntheticEvent): void => {
   e.preventDefault();
   reverseString(valueInput);
   setValueInput('');
-}
-
-//swap
-const swap = (arr: string[] | number[] | IElemState[], firstIndex: number, secondIndex: number): void => {
-  const temp = arr[firstIndex];
-  arr[firstIndex] = arr[secondIndex];
-  arr[secondIndex] = temp;
-};
-//delay
-const delay = (num: number) => {
-  return new Promise(resolve => setTimeout(resolve, num));
 }
 
 //код сортировки реверса
@@ -56,7 +41,7 @@ const reverseString = async (str: string) => {
       arrString[end].state = ElementStates.Changing
     }
     await delay(DELAY_IN_MS);
-    swap(arrString, start, end);
+    swapString(arrString, start, end);
     arrString[start].state = ElementStates.Modified
     arrString[end].state = ElementStates.Modified
     start++;
