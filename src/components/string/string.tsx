@@ -69,7 +69,7 @@ return (
        {valueString?.map((item, index) => (
           <li key = {index}>
             <Circle
-              letter={item.item}
+              letter={item.item + ''}
               state={item.state}
             />
           </li>
