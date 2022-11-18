@@ -197,6 +197,7 @@ export const ListPage: React.FC = () => {
 
     arr[0] = { ...arr[0], state: ElementStates.Default, head: true };
     setArr([...arr]);
+    setValueInput('');
     setIsLoader({
       ...isLoader,
       disabled: false,
@@ -234,6 +235,7 @@ export const ListPage: React.FC = () => {
     arr[arr.length - 1].tail = true;
 
     setArr([...arr]);
+    setValueInput('');
     setIsLoader({
       ...isLoader,
       disabled: false,
@@ -349,13 +351,15 @@ export const ListPage: React.FC = () => {
     arr[0].head = true;
 
     setArr([...arr]);
+    setValueInput('');
+    setValueInputIndex('');
     setIsLoader({
       ...isLoader,
       disabled: false,
       deleteByIndex: false,
     })
   };
-console.log(isLoader)
+
   return (
     <SolutionLayout title="Связный список">
       <div className={styles.content}>
@@ -381,13 +385,13 @@ console.log(isLoader)
         />
         <Button
           text={'Удалить из head'}
-          disabled={arr.length < 2 || isLoader.disabled || isLoader.deleteHead}
+          disabled={valueInput === '' || arr.length < 2 || isLoader.disabled || isLoader.deleteHead}
           onClick={deleteHead}
           extraClass={`${styles.smallBtn} ml-6`}
         />
         <Button
           text={'Удалить из tail'}
-          disabled={arr.length < 2 || isLoader.disabled || isLoader.deleteTail}
+          disabled={valueInput === '' || arr.length < 2 || isLoader.disabled || isLoader.deleteTail}
           onClick={deleteTail}
           extraClass={`${styles.smallBtn} ml-6`}
         />
@@ -402,7 +406,7 @@ console.log(isLoader)
         />
         <Button
           text={'Удалить по индексу'}
-          disabled={arr.length < 2 || isLoader.disabled || isLoader.deleteByIndex}
+          disabled={valueInput === '' || arr.length < 2 || isLoader.disabled || isLoader.deleteByIndex}
           onClick={deleteIndex}
           extraClass={`${styles.bigBtn} ml-6`}
         />
