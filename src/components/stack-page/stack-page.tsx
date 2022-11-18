@@ -16,7 +16,7 @@ export interface IStack {
 }
 
 export const StackPage: React.FC = () => {
-  const stack = new Stack<string>();//где именно распологать объявление класса? внутри или снаружи
+  const stack = new Stack<string>();
 
   const [arrStack, setArrStack] = React.useState<Array<IStack>>([]);
   const [valueInput, setValueInput] = React.useState<string>('');

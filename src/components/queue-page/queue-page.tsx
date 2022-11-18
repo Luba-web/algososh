@@ -1,4 +1,3 @@
-import { Console } from "console";
 import React from "react";
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { ElementStates } from "../../types/element-states";
@@ -23,10 +22,9 @@ interface IDisabled {
   pop: boolean;
 }
 
-const queue = new Queue<string>(7);//почему не сработало в внутри компонента? В чем разница со стеком?
-
 export const QueuePage: React.FC = () => {
-
+  const queue = React.useRef(new Queue<string>(7));
+  
   const initArr: Array<IArrQueue> = Array.from(Array(7), () => ({
     item: '',
     state: ElementStates.Default,
@@ -53,23 +51,23 @@ export const QueuePage: React.FC = () => {
       pop: false
     });
  
-    queue.enqueue(valueInput);
+    queue.current.enqueue(valueInput);
     setValueInput('');
 
-    arrQueue[queue.getHead()].head = 'head';
+    arrQueue[queue.current.getHead()].head = 'head';
 
-    if (queue.getTail() > 0) {
-      arrQueue[queue.getTail() - 1].tail = '';
+    if (queue.current.getTail() > 0) {
+      arrQueue[queue.current.getTail() - 1].tail = '';
     }
     
-    arrQueue[queue.getTail()].state = ElementStates.Changing;
-    arrQueue[queue.getTail()].item = valueInput;
-    arrQueue[queue.getTail()].tail = 'tail';
+    arrQueue[queue.current.getTail()].state = ElementStates.Changing;
+    arrQueue[queue.current.getTail()].item = valueInput;
+    arrQueue[queue.current.getTail()].tail = 'tail';
     setArrQueue([...arrQueue]);
 
     await delay(SHORT_DELAY_IN_MS);
 
-    arrQueue[queue.getTail()].state = ElementStates.Default;
+    arrQueue[queue.current.getTail()].state = ElementStates.Default;
     setArrQueue([...arrQueue]);
    
     setDisabled({
@@ -85,31 +83,31 @@ export const QueuePage: React.FC = () => {
     });
 
   
-    if (queue.getTail() === queue.getHead() && queue.getTail() === 6) {
-      arrQueue[queue.getHead()].tail = '';
-      arrQueue[queue.getHead()].item = '';
+    if (queue.current.getTail() === queue.current.getHead() && queue.current.getTail() === 6) {
+      arrQueue[queue.current.getHead()].tail = '';
+      arrQueue[queue.current.getHead()].item = '';
       
-    } else if (queue.getTail() === queue.getHead() && queue.getTail() !== 6) {
+    } else if (queue.current.getTail() === queue.current.getHead() && queue.current.getTail() !== 6) {
       getClear(); 
     } else {
-      queue.dequeue();
+      queue.current.dequeue();
 
-      if (queue.getHead() > 0) {
-        arrQueue[queue.getHead() - 1].head = '';
-        arrQueue[queue.getHead() - 1].item = '';
+      if (queue.current.getHead() > 0) {
+        arrQueue[queue.current.getHead() - 1].head = '';
+        arrQueue[queue.current.getHead() - 1].item = '';
       }
 
-      if(queue.getTail() < 6) {
-        arrQueue[queue.getHead() - 1].item = valueInput;
+      if(queue.current.getTail() < 6) {
+        arrQueue[queue.current.getHead() - 1].item = valueInput;
       }
 
-      arrQueue[queue.getHead() - 1].item = '';
-      arrQueue[queue.getHead() - 1].state = ElementStates.Changing;
+      arrQueue[queue.current.getHead() - 1].item = '';
+      arrQueue[queue.current.getHead() - 1].state = ElementStates.Changing;
 
       await delay(SHORT_DELAY_IN_MS);
 
-      arrQueue[queue.getHead()].head = 'head';
-      arrQueue[queue.getHead() - 1].state = ElementStates.Default;
+      arrQueue[queue.current.getHead()].head = 'head';
+      arrQueue[queue.current.getHead() - 1].state = ElementStates.Default;
       setArrQueue([...arrQueue]); 
     }
 
@@ -120,7 +118,7 @@ export const QueuePage: React.FC = () => {
   }
 
   const getClear = async () => {
-    queue.clear();
+    queue.current.clear();
     setArrQueue([...initArr]);
     setValueInput('');
   }
@@ -129,9 +127,9 @@ export const QueuePage: React.FC = () => {
     <SolutionLayout title="Очередь">
       <div className={styles.content}>
         <Input value={valueInput} isLimitText = {true} maxLength={4} onChange={handleChange} />
-        <Button text={'Добавить'} extraClass="mr-4 ml-4" disabled={valueInput === '' || queue.getTail() === 6} isLoader={disabled.push} onClick={getEnqueue}/>
-        <Button text={'Удалить'} extraClass="mr-40" disabled = {queue.isEmpty()} isLoader={disabled.pop} onClick={getDequeue} />
-        <Button text={'Очистить'} disabled = {queue.isEmpty()} onClick={getClear} />
+        <Button text={'Добавить'} extraClass="mr-4 ml-4" disabled={valueInput === '' || queue.current.getTail() === 6} isLoader={disabled.push} onClick={getEnqueue}/>
+        <Button text={'Удалить'} extraClass="mr-40" disabled = {queue.current.isEmpty()} isLoader={disabled.pop} onClick={getDequeue} />
+        <Button text={'Очистить'} disabled = {queue.current.isEmpty()} onClick={getClear} />
       </div>
       <ul className={styles.list}>
         {arrQueue?.map((item, index) => {
