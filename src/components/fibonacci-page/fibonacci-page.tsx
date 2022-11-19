@@ -5,22 +5,21 @@ import { Button } from "../ui/button/button";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import styles from "./fibonacci-page.module.css";
 import { Circle } from "../ui/circle/circle";
-import { DELAY_IN_MS, SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { fibonacci } from "./utils";
-import { delay } from "../utils/utils";
+import { useForm } from "../../hooks/useForm";
 
 export const FibonacciPage: React.FC = () => {
 
-  const [valueInput, setValueInput] = React.useState<number | string>('');
+  // const [valueInput, setValueInput] = React.useState<number | string>('');
+
+  const {valueInput, handleChange, setValueInput} = useForm({});
   const [arrFib, setArrFib] = React.useState<Array<number>>([]);
   const [disabled, setDisabled] = React.useState<boolean>(false);
-
-  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    let target = e.target as HTMLInputElement;
-    //+target делает из строки число так же как Numder(target)
-    +target.value > 0  ? setDisabled(false) : setDisabled(true);
-    setValueInput(+target.value);
-  }
+  //console.log(valueInput)
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   let target = e.target;
+  //   setValueInput(+target.value);
+  // }
 
   const handleFibArr = async (valueInput: number) => {
     setDisabled(true);
@@ -37,8 +36,8 @@ export const FibonacciPage: React.FC = () => {
   return (
     <SolutionLayout title="Последовательность Фибоначчи">
       <div className={styles.content}>
-      <Input value={valueInput} type="number" max={19} isLimitText={true} extraClass={'mr-4'} onChange={handleChange}></Input>
-      <Button text='Рассчитать' isLoader={false} disabled={disabled} onClick={handleClick}></Button>
+      <Input value={valueInput} type="number" max={19} isLimitText={true} maxLength={2} extraClass={'mr-4'} onChange={handleChange}></Input>
+      <Button text='Рассчитать' isLoader={disabled} disabled={valueInput === '' || valueInput >= 20 || valueInput < 1} onClick={handleClick}></Button>
       </div>
       <ul className={styles.list} style={arrFib?.length < 11 ? { justifyContent: 'center' } : { justifyContent: 'flex-start' }}>
        {arrFib?.map((item, index) => (

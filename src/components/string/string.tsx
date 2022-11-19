@@ -12,21 +12,22 @@ export const StringComponent: React.FC = () => {
 
 const [valueInput, setValueInput] = React.useState<string>('');
 const [valueString, setValueString] = React.useState<Array<IElemState>>([]);
-const [disabled, setDisabled] = React.useState<boolean>(false);
+const [isLoader, setIsLoader] = React.useState<boolean>(false);
 
 const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  let target = e.target as HTMLInputElement;
+  let target = e.target;
   setValueInput(target.value);
 }
 
 const handleClick = (e: React.SyntheticEvent): void => {
-  e.preventDefault();
+  e.preventDefault(); 
   reverseString(valueInput);
   setValueInput('');
 }
 
 //код сортировки реверса
-const reverseString = async (str: string) => {
+const reverseString = async (str: string) => { 
+  setIsLoader(true);
   const arrString: IElemState[] = [];
   str.split('').forEach((item) => {
     arrString.push({item: item, state: ElementStates.Default})
@@ -34,7 +35,7 @@ const reverseString = async (str: string) => {
   setValueString(arrString);
   let start = 0;
   let end = arrString.length - 1;
-  console.log(end);
+  
   while (start < end) {
     if(end < 3) {
       arrString[start].state = ElementStates.Changing
@@ -53,17 +54,14 @@ const reverseString = async (str: string) => {
   arrString[start].state = ElementStates.Modified
   arrString[end].state = ElementStates.Modified
   setValueString([...arrString])
+  setIsLoader(false);
 }
-
-React.useEffect(() => {
-  setDisabled(valueInput.length === 0 ? true : false);
-}, [valueInput]);
 
 return (
     <SolutionLayout title="Строка">
       <div className={styles.content}>
-      <Input value={valueInput} placeholder={'Введите текст'} isLimitText = {true} maxLength={11} extraClass={'mr-4'} onChange={handleChange}></Input>
-      <Button text={'Развернуть'} isLoader={false} disabled={disabled} onClick={handleClick}></Button>
+      <Input value={valueInput} isLimitText = {true} maxLength={11} extraClass={'mr-4'} onChange={handleChange}></Input>
+      <Button text={'Развернуть'} isLoader={isLoader} disabled={valueInput === ''} onClick={handleClick}></Button>
       </div>
       <ul className={styles.list}>
        {valueString?.map((item, index) => (

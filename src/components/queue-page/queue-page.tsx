@@ -41,7 +41,7 @@ export const QueuePage: React.FC = () => {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let target = e.target as HTMLInputElement;
+    let target = e.target;
     setValueInput(target.value);
   }
  

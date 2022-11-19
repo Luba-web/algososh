@@ -25,7 +25,7 @@ export const StackPage: React.FC = () => {
   const [disabledPop, setDisabledPop] = React.useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let target = e.target as HTMLInputElement;
+    let target = e.target;
     setValueInput(target.value);
   }
 
