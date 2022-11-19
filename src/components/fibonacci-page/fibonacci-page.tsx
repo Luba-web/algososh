@@ -6,20 +6,18 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import styles from "./fibonacci-page.module.css";
 import { Circle } from "../ui/circle/circle";
 import { fibonacci } from "./utils";
-import { useForm } from "../../hooks/useForm";
 
 export const FibonacciPage: React.FC = () => {
 
-  // const [valueInput, setValueInput] = React.useState<number | string>('');
+  const [valueInput, setValueInput] = React.useState<number | string>('');
 
-  const {valueInput, handleChange, setValueInput} = useForm({});
   const [arrFib, setArrFib] = React.useState<Array<number>>([]);
   const [disabled, setDisabled] = React.useState<boolean>(false);
-  //console.log(valueInput)
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   let target = e.target;
-  //   setValueInput(+target.value);
-  // }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let target = e.target;
+    setValueInput(+target.value);
+  }
 
   const handleFibArr = async (valueInput: number) => {
     setDisabled(true);
