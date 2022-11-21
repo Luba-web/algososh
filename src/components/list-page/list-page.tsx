@@ -61,13 +61,11 @@ export const ListPage: React.FC = () => {
   const [disabled, setDisabled] = React.useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let target = e.target;
-    setValueInput(target.value);
+    setValueInput(e.target.value);
   };
 
   const handleChangeIndex = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let target: number = +e.target.value;
-    setValueInputIndex(target);
+    setValueInputIndex(+e.target.value);
   };
 
   const addHead = async () => {
@@ -410,7 +408,7 @@ export const ListPage: React.FC = () => {
         <Input 
           type='number'
           maxLength={4}
-          max={3}
+          max={arr.length-1}
           value={valueInputIndex} 
           extraClass={`${styles.input}`} 
           placeholder={'Введите индекс'} 

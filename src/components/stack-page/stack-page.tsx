@@ -25,8 +25,7 @@ export const StackPage: React.FC = () => {
   const [disabledPop, setDisabledPop] = React.useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let target = e.target;
-    setValueInput(target.value);
+    setValueInput(e.target.value);
   }
 
   const getPush = async () => {
@@ -86,8 +85,8 @@ export const StackPage: React.FC = () => {
     <SolutionLayout title="Стек">
       <div className={styles.content}>
         <Input value={valueInput} isLimitText = {true} maxLength={4} onChange={handleChange} />
-        <Button text={'Добавить'} extraClass="mr-4 ml-4" disabled={valueInput === ''} onClick={getPush} />
-        <Button text={'Удалить'} extraClass="mr-40" disabled={ !arrStack.length || disabledPop || disabledPush} onClick={getPop} />
+        <Button text={'Добавить'} extraClass="mr-4 ml-4" disabled={valueInput === ''} isLoader={disabledPush} onClick={getPush} />
+        <Button text={'Удалить'} extraClass="mr-40" disabled={ !arrStack.length || disabledPop || disabledPush} isLoader={disabledPop} onClick={getPop} />
         <Button text={'Очистить'} disabled={!arrStack.length || disabledPop || disabledPush } onClick={getClear} />
       </div>
       <ul className={styles.list}>

@@ -41,8 +41,7 @@ export const QueuePage: React.FC = () => {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let target = e.target;
-    setValueInput(target.value);
+    setValueInput(e.target.value);
   }
  
   const getEnqueue = async () => {

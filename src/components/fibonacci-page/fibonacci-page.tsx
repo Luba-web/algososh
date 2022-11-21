@@ -15,8 +15,7 @@ export const FibonacciPage: React.FC = () => {
   const [disabled, setDisabled] = React.useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let target = e.target;
-    setValueInput(+target.value);
+    setValueInput(+e.target.value);
   }
 
   const handleFibArr = async (valueInput: number) => {

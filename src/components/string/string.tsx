@@ -15,8 +15,7 @@ const [valueString, setValueString] = React.useState<Array<IElemState>>([]);
 const [isLoader, setIsLoader] = React.useState<boolean>(false);
 
 const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  let target = e.target;
-  setValueInput(target.value);
+  setValueInput(e.target.value);
 }
 
 const handleClick = (e: React.SyntheticEvent): void => {
