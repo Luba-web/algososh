@@ -48,7 +48,7 @@ export const ListPage: React.FC = () => {
   const [arr, setArr] = React.useState<Array<IArrList>>(initArr);
 
   const [valueInput, setValueInput] = React.useState<string>('');
-  const [valueInputIndex, setValueInputIndex] = React.useState<number>(0);
+  const [valueInputIndex, setValueInputIndex] = React.useState<number | null>(null);
 
   const [isLoader, setIsLoader] = React.useState<IDisabledList>({
     addHead: false,
@@ -66,6 +66,10 @@ export const ListPage: React.FC = () => {
 
   const handleChangeIndex = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueInputIndex(+e.target.value);
+    //валидация input от 0 до 9
+    if(+e.target.value > 9 || +e.target.value < 0) {
+      setValueInputIndex(arr.length);
+    }
   };
 
   const addHead = async () => {
@@ -170,8 +174,8 @@ export const ListPage: React.FC = () => {
       deleteHead: true,
     })
     setDisabled(true);
-
-    list.current.deleteList(0);
+    
+    list.current.deleteNode(0);
     arr[0] = {
       ...arr[0],
       item: '',
@@ -208,7 +212,7 @@ export const ListPage: React.FC = () => {
     })
     setDisabled(true);
 
-    list.current.deleteList(arr.length - 1);
+    list.current.deleteNode(arr.length - 1);
     arr[arr.length - 1] = {
       ...arr[arr.length - 1],
       item: '',
@@ -241,7 +245,7 @@ export const ListPage: React.FC = () => {
     })
   };
 
-  const addIndex = async () => {
+  const addIndex = async (index: number) => {
     setIsLoader({
       ...isLoader,
       addByIndex: true,
@@ -249,13 +253,12 @@ export const ListPage: React.FC = () => {
     setDisabled(true);
 
     const size = list.current.getSize();
-
-    if (valueInputIndex < 0 || valueInputIndex > size) {
+    if (index< 0 || index > size) {
       return;
     }
 
-    list.current.insertAt(valueInput, valueInputIndex);
-    for (let i = 0; i <= valueInputIndex; i++) {
+    list.current.insertAt(valueInput, index);
+    for (let i = 0; i <= index; i++) {
       if (i < size) {
         arr[i] = { ...arr[i], add: true, miniCircle: { name: valueInput }};
       }
@@ -267,18 +270,18 @@ export const ListPage: React.FC = () => {
           miniCircle: undefined,
         };
       }
-      if (i === valueInputIndex && valueInputIndex === 0) {
+      if (i === index && index === 0) {
         arr[0].head = false;
       }
-      if (i === size - 1 && valueInputIndex === size) {
+      if (i === size - 1 && index === size) {
         arr[size - 1].tail = false;
       }
       setArr([...arr]);
       await delay(SHORT_DELAY_IN_MS);
     }
-    if (valueInputIndex === size) {
-      arr[valueInputIndex! - 1] = {
-        ...arr[valueInputIndex! - 1],
+    if (index === size) {
+      arr[index! - 1] = {
+        ...arr[index! - 1],
         add: false,
         miniCircle: undefined,
       };
@@ -287,23 +290,23 @@ export const ListPage: React.FC = () => {
         state: ElementStates.Modified,
       });
     } else {
-      arr[valueInputIndex] = {
-        ...arr[valueInputIndex],
+      arr[index] = {
+        ...arr[index],
         add: false,
         miniCircle: undefined,
       };
-      arr.splice(valueInputIndex, 0, {
+      arr.splice(index, 0, {
         item: valueInput,
         state: ElementStates.Modified,
       });
     }
     setArr([...arr]);
     await delay(SHORT_DELAY_IN_MS);
-    if (valueInputIndex === 0) {
+    if (index === 0) {
       arr[0].head = true;
     }
 
-    if (valueInputIndex === size) {
+    if (index === size) {
       arr[size].tail = true;
     }
 
@@ -316,33 +319,33 @@ export const ListPage: React.FC = () => {
       addByIndex: false,
     })
     setValueInput('');
-    setValueInputIndex(0);
+    setValueInputIndex(null);
   };
 
-  const deleteIndex = async () => {
+  const deleteIndex = async (index: number) => {
     setIsLoader({
       ...isLoader,
       deleteByIndex: true,
     })
     setDisabled(true);
 
-    list.current.deleteList(valueInputIndex);
-    for (let i = 0; i <= valueInputIndex; i++) {
+    list.current.deleteNode(index);
+    for (let i = 0; i <= index; i++) {
       arr[i].state = ElementStates.Changing;
       setArr([...arr]);
       await delay(SHORT_DELAY_IN_MS);
     }
-    arr[valueInputIndex] = {
-      ...arr[valueInputIndex],
+    arr[index] = {
+      ...arr[index],
       item: '',
       dell: true,
-      miniCircle: { name: arr[valueInputIndex].item },
+      miniCircle: { name: arr[index].item },
     };
     setArr([...arr]);
 
     await delay(SHORT_DELAY_IN_MS);
 
-    arr.splice(valueInputIndex, 1);
+    arr.splice(index, 1);
     setArr([...arr]);
 
     await delay(SHORT_DELAY_IN_MS);
@@ -355,7 +358,7 @@ export const ListPage: React.FC = () => {
 
     setArr([...arr]);
     setValueInput('');
-    setValueInputIndex(0);
+    setValueInputIndex(null);
 
     setDisabled(false);
     setIsLoader({
@@ -372,6 +375,7 @@ export const ListPage: React.FC = () => {
           isLimitText={true}
           maxLength={4}
           value={valueInput}
+          disabled={disabled}
           onChange={handleChange}
           extraClass={`${styles.input}`}
         />
@@ -409,23 +413,24 @@ export const ListPage: React.FC = () => {
           type='number'
           maxLength={4}
           max={arr.length-1}
-          value={valueInputIndex} 
+          value={valueInputIndex == null ? '' : valueInputIndex}
           extraClass={`${styles.input}`} 
+          disabled={disabled}
           placeholder={'Введите индекс'} 
           onChange={handleChangeIndex} 
           />
         <Button
           text={'Добавить по индексу'}
-          disabled={!valueInput || !valueInputIndex || disabled || valueInputIndex > arr.length || arr.length >= 7}
+          disabled={valueInput === '' || valueInputIndex === null || valueInputIndex > arr.length || arr.length >= 7 || disabled}
           isLoader={isLoader.addByIndex}
-          onClick={addIndex}
+          onClick={() => addIndex(valueInputIndex as number)}
           extraClass={`${styles.bigBtn} ml-6`}
         />
         <Button
           text={'Удалить по индексу'}
-          disabled={valueInputIndex > arr.length - 1 || disabled || arr.length - 1 < 1}
+          disabled={valueInputIndex as number > arr.length - 1 || disabled || arr.length - 1 < 1 || valueInputIndex === null}
           isLoader={isLoader.deleteByIndex}
-          onClick={deleteIndex}
+          onClick={() => deleteIndex(valueInputIndex as number)}
           extraClass={`${styles.bigBtn} ml-6`}
         />
       </div>
