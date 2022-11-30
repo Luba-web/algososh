@@ -1,10 +1,10 @@
 describe('Тестирование переходов по страницам', () => {
   it('Доступно на localhost:3000', function () {
-    cy.visit('http://localhost:3000/');
+    cy.visit('/');
   });
 
   beforeEach(function () {
-    cy.visit('http://localhost:3000/');
+    cy.visit('/');
   });
 
   it('Открыта страница строки - recursion', function () {

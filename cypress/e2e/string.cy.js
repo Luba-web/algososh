@@ -1,6 +1,13 @@
+import {
+  circle,
+  colorModified,
+  colorChanging,
+  colorDefault,
+} from './constants';
+
 describe('Тестирование строки е2е', () => {
   before(() => {
-    cy.visit('http://localhost:3000/recursion');
+    cy.visit('recursion');
   });
 
   it('Проверка, если в инпуте пусто, то кнопка добавления недоступна', () => {
@@ -12,28 +19,28 @@ describe('Тестирование строки е2е', () => {
     cy.get('input').type('12345');
     cy.get('button').contains('Развернуть').click();
 
-    cy.get('li').should('have.length', 5);
+    cy.get(circle).should('have.length', 5);
 
-    cy.get('li').eq(0).find('[class*=circle_default]').contains('1');
-    cy.get('li').eq(1).find('[class*=circle_default]').contains('2');
-    cy.get('li').eq(2).find('[class*=circle_default]').contains('3');
-    cy.get('li').eq(3).find('[class*=circle_default]').contains('4');
-    cy.get('li').eq(4).find('[class*=circle_default]').contains('5');
-
-    cy.wait(500);
-
-    cy.get('li').eq(0).find('[class*=circle_modified]').contains('5');
-    cy.get('li').eq(1).find('[class*=circle_changing]').contains('2');
-    cy.get('li').eq(2).find('[class*=circle_default]').contains('3');
-    cy.get('li').eq(3).find('[class*=circle_changing]').contains('4');
-    cy.get('li').eq(4).find('[class*=circle_modified]').contains('1');
+    cy.get(circle).eq(0).find(colorDefault).contains('1');
+    cy.get(circle).eq(1).find(colorDefault).contains('2');
+    cy.get(circle).eq(2).find(colorDefault).contains('3');
+    cy.get(circle).eq(3).find(colorDefault).contains('4');
+    cy.get(circle).eq(4).find(colorDefault).contains('5');
 
     cy.wait(500);
 
-    cy.get('li').eq(0).find('[class*=circle_modified]').contains('5');
-    cy.get('li').eq(1).find('[class*=circle_modified]').contains('4');
-    cy.get('li').eq(2).find('[class*=circle_modified]').contains('3');
-    cy.get('li').eq(3).find('[class*=circle_modified]').contains('2');
-    cy.get('li').eq(4).find('[class*=circle_modified]').contains('1');
+    cy.get(circle).eq(0).find(colorModified).contains('5');
+    cy.get(circle).eq(1).find(colorChanging).contains('2');
+    cy.get(circle).eq(2).find(colorDefault).contains('3');
+    cy.get(circle).eq(3).find(colorChanging).contains('4');
+    cy.get(circle).eq(4).find(colorModified).contains('1');
+
+    cy.wait(500);
+
+    cy.get(circle).eq(0).find(colorModified).contains('5');
+    cy.get(circle).eq(1).find(colorModified).contains('4');
+    cy.get(circle).eq(2).find(colorModified).contains('3');
+    cy.get(circle).eq(3).find(colorModified).contains('2');
+    cy.get(circle).eq(4).find(colorModified).contains('1');
   });
 });
