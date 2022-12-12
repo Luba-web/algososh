@@ -437,7 +437,7 @@ export const ListPage: React.FC = () => {
       <ul className={styles.list}>
         {arr?.map((item, index) => {
           return (
-            <div key={index + 1} className={styles.block}>
+            <li key={index + 1} className={styles.block}>
               <Circle
                 key={index}
                 letter={item.item}
@@ -474,7 +474,7 @@ export const ListPage: React.FC = () => {
                   extraClass={styles.dell}
                 />
               )}
-            </div>
+            </li>
           );
         })}
       </ul>

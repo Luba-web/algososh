@@ -90,8 +90,8 @@ export const StackPage: React.FC = () => {
         <Button text={'Очистить'} disabled={!arrStack.length || disabledPop || disabledPush } onClick={getClear} />
       </div>
       <ul className={styles.list}>
-        {arrStack?.map((item, index) => {
-          return (
+        {arrStack?.map((item, index) => (
+          <li key={index}>
             <Circle
               key={index}
               letter={`${item.item}`}
@@ -100,8 +100,9 @@ export const StackPage: React.FC = () => {
               index={index}
               extraClass={'mt-15'}
             />
-          );
-        })}
+            </li>
+          )
+        )}
       </ul>
     </SolutionLayout>
   );
