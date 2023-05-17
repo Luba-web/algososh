@@ -18,22 +18,22 @@ function App() {
           <Route path="/" exact>
             <MainPage />
           </Route>
-          <Route path="/recursion">
+          <Route path="/recursion" exact>
             <StringComponent />
           </Route>
-          <Route path="/fibonacci">
+          <Route path="/fibonacci" exact>
             <FibonacciPage />
           </Route>
-          <Route path="/sorting">
+          <Route path="/sorting" exact>
             <SortingPage />
           </Route>
-          <Route path="/stack">
+          <Route path="/stack" exact>
             <StackPage />
           </Route>
-          <Route path="/queue">
+          <Route path="/queue" exact>
             <QueuePage />
           </Route>
-          <Route path="/list">
+          <Route path="/list" exact>
             <ListPage />
           </Route>
         </Switch>
